@@ -2,6 +2,11 @@
 
 Notes on how to do stuff with PostgreSQL.
 
+Sources:
+
+* [PostgreSQL Docs](http://postgresql.com/docs/) v 9.5+
+* [Tod's McLeod repo and course](https://github.com/GoesToEleven/golang-web-dev/tree/master/)/postgres
+
 __Command Shell commands__
 
 Login
@@ -45,6 +50,8 @@ CREATE TABLE table_name (
 -- Drops ---------------------------------------------
 DROP DATABASE database_name;
 DROP TABLE table_name;
+-- Delete record from a table
+DELETE FROM table_name WHERE [condition happens];
 
 -- Insertion -----------------------------------------
 -- Insert a record
@@ -56,7 +63,31 @@ INSERT INTO table_name(column) VALUES (value1), (value2), (value...);
 -- Select all records from one table
 SELECT * FROM table_name;
 
--- Users ---------------------------------------------
+-- Update --------------------------------------------
+UPDATE table_name SET columns = [value, value] WHERE [condition happens];
+```
+
+__Users__
+
+* __Privileges__: `{ALL, DELETE, INSERT, SELECT, RULE, UPDATE}` for the users.
+* __SU__: users can be granted this status with `SUPERUSER` or discharged with `NONSUPERUSER`.
+
+``` sql
+-- Alter user (modifier)
+ALTER USER user_name WITH [alteration];
+
+-- Create user
+CREATE USER user_name WITH PASSWORD 'super password!';
+
+-- Details of users
+$ \du
+
+-- Grants
+GRANT [PRIVILEGE] PRIVILEGES ON DATABASE database_name FROM user_name;
+
+-- Removal
+DROP USER user_name;
+
 -- Who is the current user
 SELECT current_user;
 
@@ -107,18 +138,24 @@ __Clauses__
 
 * `AND`: allows you to join conditionals.
 * `IN`: allows you to specify multiple value in a `WHERE` clause.
-* `IS NOT NULL`:
-* `LIKE`:
+* `IS NOT NULL`: returns all not null fields.
+* `LIKE`: uses Regex to identify and return pattern-similar results.
+* `LIMIT` throws back a predefined number of records.
 * `NOT`: returns the negation of the condition.
-* `OR`:
+* `OR`: or conditional operator.
+* `ORDER BY`: lists results in a predefined way, given one column's values.
 * `WHERE`: helps you to filter the registries that complain with certain rules.
 
+Some samples:
 ``` sql
 -- And
 SELECT [selection] FROM table WHERE [condition] AND [condition];
 
 -- In
 SELECT [selection] FROM table WHERE [base] IN(value #1, value #2);
+
+-- Limit
+SELECT [selection] FROM table LIMIT [num of records];
 
 -- Not
 SELECT [selection] FROM table WHERE [base] NOT [condition];
